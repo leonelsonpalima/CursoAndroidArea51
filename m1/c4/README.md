@@ -1,0 +1,1 @@
+- Airplanemodedetector: Aplicación para detectar el estado del modo avión.
