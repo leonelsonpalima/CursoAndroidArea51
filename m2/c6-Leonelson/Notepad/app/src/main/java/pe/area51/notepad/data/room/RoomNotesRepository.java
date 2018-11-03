@@ -1,5 +1,8 @@
 package pe.area51.notepad.data.room;
 
+import android.arch.core.util.Function;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -26,6 +29,25 @@ public class RoomNotesRepository implements NotesRepository {
             domainNotes.add(createDomainNote(roomNote));
         }
         return domainNotes;
+    }
+
+    @NonNull
+    @Override
+    public LiveData<List<Note>> subscribeToAllNotes() {
+        final LiveData<List<pe.area51.notepad.data.room.Note>> source = roomDatabase.getNoteDao().subscribeToAll();
+        final LiveData<List<Note>> result = Transformations.map(
+                source, new Function<List<pe.area51.notepad.data.room.Note>, List<Note>>() {
+                    @Override
+                    public List<Note> apply(List<pe.area51.notepad.data.room.Note> input) {
+                        final List<Note> domainNotes = new ArrayList<>();
+                        for (final pe.area51.notepad.data.room.Note roomNote: input){
+                            domainNotes.add(createDomainNote(roomNote));
+                        }
+                        return domainNotes;
+                    }
+                }
+        );
+        return result;
     }
 
     @Override

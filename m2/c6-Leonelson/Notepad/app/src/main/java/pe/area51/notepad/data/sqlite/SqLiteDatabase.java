@@ -1,5 +1,6 @@
 package pe.area51.notepad.data.sqlite;
 
+import android.arch.lifecycle.LiveData;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
@@ -16,6 +17,12 @@ public class SqLiteDatabase implements NotesRepository {
 
     public SqLiteDatabase(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
+    }
+
+    @NonNull
+    @Override
+    public LiveData<List<Note>> subscribeToAllNotes() {
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     @NonNull

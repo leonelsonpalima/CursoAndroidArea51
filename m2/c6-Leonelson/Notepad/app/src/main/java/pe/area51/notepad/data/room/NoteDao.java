@@ -1,5 +1,6 @@
 package pe.area51.notepad.data.room;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -13,6 +14,8 @@ public interface NoteDao {
 
     @Query("SELECT * FROM notes")
     List<Note> getAll();
+
+    LiveData<List<Note>> subscribeToAll();
 
     @Delete
     int delete(Note note);

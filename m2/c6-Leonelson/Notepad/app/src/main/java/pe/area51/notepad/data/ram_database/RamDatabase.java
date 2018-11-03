@@ -1,5 +1,6 @@
 package pe.area51.notepad.data.ram_database;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -20,6 +21,12 @@ public class RamDatabase implements NotesRepository {
     @Override
     public List<Note> getAllNotes() {
         return notes;
+    }
+
+    @NonNull
+    @Override
+    public LiveData<List<Note>> subscribeToAllNotes() {
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     @Override

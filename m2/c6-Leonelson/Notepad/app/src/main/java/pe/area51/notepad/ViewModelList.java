@@ -1,10 +1,13 @@
 package pe.area51.notepad;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +19,17 @@ import pe.area51.notepad.domain.NotesRepository;
 public class ViewModelList extends ViewModel {
 
     private final NotesRepository notesRepository;
-    private final MutableLiveData<List<Note>> fetchAllNotesResponse;
+    private final MediatorLiveData<List<Note>> fetchAllNotesResponse;
     private final MutableLiveData<Note> createNoteResponse;
 
-    private final List<Note> notes;
+    //private final List<Note> notes;
 
 
     public ViewModelList(NotesRepository notesRepository) {
         this.notesRepository = notesRepository;
-        fetchAllNotesResponse = new MutableLiveData<>();
+        fetchAllNotesResponse = new MediatorLiveData<>();
         createNoteResponse = new MutableLiveData<>();
-        notes = new ArrayList<>();
+       // notes = new ArrayList<>();
     }
 
 
@@ -34,11 +37,17 @@ public class ViewModelList extends ViewModel {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                final List<Note> notes = notesRepository.getAllNotes();
+                final List<Note> result = notesRepository.getAllNotes();
                 //Debemos llamar a postValue ya que no estamos en el Main Thread
-                notes.clear();
-                notes.addAll(notes);
-                fetchAllNotesResponse.postValue(ViewModelList.this.notes);
+                //notes.clear();
+                //notes.addAll(notes);
+                fetchAllNotesResponse.addSource((LiveData<List<Note>>) result, new Observer<List<Note>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Note> notes) {
+                        fetchAllNotesResponse.setValue(notes);
+                    }
+                });
+                fetchAllNotesResponse.postValue(result);
             }
         });
     }
@@ -56,8 +65,8 @@ public class ViewModelList extends ViewModel {
             @Override
             public void run() {
                 final Note createdNote = notesRepository.createNote(note);
-                notes.add(createdNote);
-                fetchAllNotesResponse.postValue(notes);
+                //notes.add(createdNote);
+                //fetchAllNotesResponse.postValue(notes);
                 createNoteResponse.postValue(createdNote);
 
             }

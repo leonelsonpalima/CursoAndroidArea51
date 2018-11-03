@@ -1,5 +1,6 @@
 package pe.area51.notepad.domain;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -8,6 +9,8 @@ public interface NotesRepository {
 
     @NonNull
     List<Note> getAllNotes();
+
+    LiveData<List<Note>> subscribeToAllNotes();
 
     boolean updateNote(@NonNull final Note note);
 
