@@ -29,20 +29,17 @@ public class ViewModelList extends ViewModel {
     }
 
     public void fetchAllNotes() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                final LiveData<List<Note>> result = notesRepository.subscribeToAllNotes();
-                //Debemos llamar a "postValue" si no estamos en el MainThread.
-                fetchAllNotesResponse.addSource(result, new Observer<List<Note>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Note> notes) {
-                        //Este observador se ejecuta en el MainThread,
-                        //por lo que podemos utilizar "setValue".
-                        fetchAllNotesResponse.setValue(notes);
-                    }
-                });
-            }
+        AsyncTask.execute(() -> {
+            final LiveData<List<Note>> result = notesRepository.subscribeToAllNotes();
+            //Debemos llamar a "postValue" si no estamos en el MainThread.
+            fetchAllNotesResponse.addSource(result, new Observer<List<Note>>() {
+                @Override
+                public void onChanged(@Nullable List<Note> notes) {
+                    //Este observador se ejecuta en el MainThread,
+                    //por lo que podemos utilizar "setValue".
+                    fetchAllNotesResponse.setValue(notes);
+                }
+            });
         });
     }
 
@@ -54,12 +51,9 @@ public class ViewModelList extends ViewModel {
                 content,
                 creationTimestamp
         );
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                final Note createdNote = notesRepository.createNote(note);
-                createNoteResponse.postValue(createdNote);
-            }
+        AsyncTask.execute(() -> {
+            final Note createdNote = notesRepository.createNote(note);
+            createNoteResponse.postValue(createdNote);
         });
     }
 

@@ -19,4 +19,7 @@ public interface NotesRepository {
 
     @NonNull
     Note createNote(@NonNull final Note note);
+
+    @NonNull
+    LiveData<Note> subscribeToNoteById(@NonNull final String noteId);
 }

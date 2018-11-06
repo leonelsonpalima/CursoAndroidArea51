@@ -48,12 +48,14 @@ public class SqLiteDatabase implements NotesRepository {
 
     @Override
     public boolean updateNote(@NonNull Note note) {
-        return false;
+
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     @Override
     public boolean deleteNote(@NonNull String noteId) {
-        return false;
+
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     @NonNull
@@ -74,5 +76,11 @@ public class SqLiteDatabase implements NotesRepository {
                 note.getContent(),
                 note.getCreationTimestamp()
         );
+    }
+
+    @NonNull
+    @Override
+    public LiveData<Note> subscribeToNoteById(@NonNull String noteId) {
+        return null;
     }
 }

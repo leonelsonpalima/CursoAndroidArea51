@@ -18,6 +18,9 @@ public interface NoteDao {
     @Query("SELECT * FROM notes")
     LiveData<List<Note>> subscribeToAll();
 
+    @Query("Select * from notes where id = :noteId")
+    LiveData<Note> subscribeById(long noteId);
+
     @Delete
     int delete(Note note);
 

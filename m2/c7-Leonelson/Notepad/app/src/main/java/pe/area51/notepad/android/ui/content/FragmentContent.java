@@ -16,21 +16,17 @@ import pe.area51.notepad.domain.Note;
 
 public class FragmentContent extends Fragment {
 
-    private static final String KEY_ARG_NOTE_TITLE = "note_title";
-    private static final String KEY_ARG_NOTE_CONTENT = "note_content";
-    private static final String KEY_ARG_NOTE_CREATION_TIMESTAMP = "note_creation_timestamp";
+    private static final String KEY_ARG_NOTE_ID = "noteID";
 
     private TextView textViewDate;
     private TextView textViewContent;
 
-    private Note note;
+    private String noteId;
 
-    public static FragmentContent newInstance(final Note note) {
+    public static FragmentContent newInstance(final String noteId) {
         final FragmentContent contentFragment = new FragmentContent();
         final Bundle arguments = new Bundle();
-        arguments.putString(KEY_ARG_NOTE_TITLE, note.getTitle());
-        arguments.putString(KEY_ARG_NOTE_CONTENT, note.getContent());
-        arguments.putLong(KEY_ARG_NOTE_CREATION_TIMESTAMP, note.getCreationTimestamp());
+        arguments.putString(KEY_ARG_NOTE_ID, noteId);
         contentFragment.setArguments(arguments);
         return contentFragment;
     }
@@ -40,12 +36,7 @@ public class FragmentContent extends Fragment {
         super.onCreate(savedInstanceState);
         final Bundle arguments = getArguments();
         checkArguments(arguments);
-        note = new Note(
-                "",
-                arguments.getString(KEY_ARG_NOTE_TITLE),
-                arguments.getString(KEY_ARG_NOTE_CONTENT),
-                arguments.getLong(KEY_ARG_NOTE_CREATION_TIMESTAMP)
-        );
+        noteId = arguments.getString(KEY_ARG_NOTE_ID);
     }
 
     @Nullable
@@ -61,23 +52,22 @@ public class FragmentContent extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showNote();
-        getActivity().setTitle(note.getTitle());
+        //getActivity().setTitle(note.getTitle());
     }
 
     private static void checkArguments(final Bundle arguments) {
         if (arguments != null &&
-                arguments.containsKey(KEY_ARG_NOTE_TITLE) &&
-                arguments.containsKey(KEY_ARG_NOTE_CONTENT) &&
-                arguments.containsKey(KEY_ARG_NOTE_CREATION_TIMESTAMP)) {
+                arguments.containsKey(KEY_ARG_NOTE_ID)) {
             return;
         }
         throw new RuntimeException("Fragment doesn't have needed arguments. Call newInstance() static creation method.");
     }
 
     private void showNote() {
-        final Date noteDate = new Date(note.getCreationTimestamp());
-        final DateFormat dateFormat = DateFormat.getInstance();
-        textViewDate.setText(dateFormat.format(noteDate));
-        textViewContent.setText(note.getContent());
+//        final Date noteDate = new Date(note.getCreationTimestamp());
+//        final DateFormat dateFormat = DateFormat.getInstance();
+//        textViewDate.setText(dateFormat.format(noteDate));
+//        textViewContent.setText(note.getContent());
+        textViewContent.setText(noteId);
     }
 }

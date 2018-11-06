@@ -38,15 +38,12 @@ public class RoomNotesRepository implements NotesRepository {
         final LiveData<List<pe.area51.notepad.data.room.Note>> source =
                 roomDatabase.getNoteDao().subscribeToAll();
         final LiveData<List<Note>> result = Transformations.map(
-                source, new Function<List<pe.area51.notepad.data.room.Note>, List<Note>>() {
-                    @Override
-                    public List<Note> apply(List<pe.area51.notepad.data.room.Note> input) {
-                        final List<Note> domainNotes = new ArrayList<>();
-                        for (final pe.area51.notepad.data.room.Note roomNote: input) {
-                            domainNotes.add(createDomainNote(roomNote));
-                        }
-                        return domainNotes;
+                source, input -> {
+                    final List<Note> domainNotes = new ArrayList<>();
+                    for (final pe.area51.notepad.data.room.Note roomNote : input) {
+                        domainNotes.add(createDomainNote(roomNote));
                     }
+                    return domainNotes;
                 }
         );
         return result;
@@ -75,6 +72,14 @@ public class RoomNotesRepository implements NotesRepository {
                 note.getContent(),
                 note.getCreationTimestamp()
         );
+    }
+
+    @NonNull
+    @Override
+    public LiveData<Note> subscribeToNoteById(@NonNull String noteId) {
+        final LiveData<pe.area51.notepad.data.room.Note> roomNote =
+                roomDatabase.getNoteDao().subscribeById(Long.valueOf(noteId));
+        return Transformations.map(roomNote, this::createDomainNote);
     }
 
     private Note createDomainNote(final pe.area51.notepad.data.room.Note roomNote) {

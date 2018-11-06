@@ -31,12 +31,12 @@ public class RamDatabase implements NotesRepository {
 
     @Override
     public boolean updateNote(@NonNull Note note) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     @Override
     public boolean deleteNote(@NonNull String noteId) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     @NonNull
@@ -51,5 +51,11 @@ public class RamDatabase implements NotesRepository {
         );
         notes.add(createdNote);
         return createdNote;
+    }
+
+    @NonNull
+    @Override
+    public LiveData<Note> subscribeToNoteById(@NonNull String noteId) {
+        return null;
     }
 }

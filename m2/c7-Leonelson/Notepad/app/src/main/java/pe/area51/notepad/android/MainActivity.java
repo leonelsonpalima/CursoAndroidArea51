@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements FragmentList.Frag
 
     @Override
     public void onNoteSelected(Note note) {
-        final FragmentContent fragmentContent = FragmentContent.newInstance(note);
+        final FragmentContent fragmentContent = FragmentContent.newInstance(note.getId());
         fragmentManager
                 .beginTransaction()
                 .addToBackStack(null)
