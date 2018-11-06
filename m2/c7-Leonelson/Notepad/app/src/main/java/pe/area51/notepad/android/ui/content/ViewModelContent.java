@@ -20,7 +20,7 @@ public class ViewModelContent extends ViewModel {
         fetchNoteByIdResponse = new MediatorLiveData<>();
     }
 
-    public void FetchNoteByIdResponse(@NonNull final String noteId) {
+    public void fetchNoteByIdResponse(@NonNull final String noteId) {
         AsyncTask.execute(() -> {
             fetchNoteByIdResponse.addSource(notesRepository.subscribeToNoteById(noteId),
                     fetchNoteByIdResponse::setValue

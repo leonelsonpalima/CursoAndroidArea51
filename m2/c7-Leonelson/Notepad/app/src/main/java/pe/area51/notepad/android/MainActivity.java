@@ -1,15 +1,17 @@
 package pe.area51.notepad.android;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import pe.area51.notepad.R;
+import pe.area51.notepad.android.ui.FragmentInteractionInterface;
 import pe.area51.notepad.android.ui.content.FragmentContent;
 import pe.area51.notepad.android.ui.list.FragmentList;
 import pe.area51.notepad.domain.Note;
 
-public class MainActivity extends AppCompatActivity implements FragmentList.FragmentListInterface {
+public class MainActivity extends AppCompatActivity implements FragmentInteractionInterface {
 
     private FragmentManager fragmentManager;
 
@@ -38,13 +40,19 @@ public class MainActivity extends AppCompatActivity implements FragmentList.Frag
         */
     }
 
+
     @Override
-    public void onNoteSelected(Note note) {
-        final FragmentContent fragmentContent = FragmentContent.newInstance(note.getId());
+    public void showNoteContent(@NonNull String noteId) {
+        final FragmentContent fragmentContent = FragmentContent.newInstance(noteId);
         fragmentManager
                 .beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.fragmentContainer, fragmentContent)
                 .commit();
+    }
+
+    @Override
+    public void setTitle(String title) {
+        super.setTitle(title);
     }
 }

@@ -1,5 +1,9 @@
 package pe.area51.notepad.android.ui.content;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +16,10 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import pe.area51.notepad.R;
+import pe.area51.notepad.android.ui.FragmentBase;
 import pe.area51.notepad.domain.Note;
 
-public class FragmentContent extends Fragment {
+public class FragmentContent extends FragmentBase {
 
     private static final String KEY_ARG_NOTE_ID = "noteID";
 
@@ -22,6 +27,8 @@ public class FragmentContent extends Fragment {
     private TextView textViewContent;
 
     private String noteId;
+
+    private ViewModelContent viewModelContent;
 
     public static FragmentContent newInstance(final String noteId) {
         final FragmentContent contentFragment = new FragmentContent();
@@ -32,11 +39,20 @@ public class FragmentContent extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        viewModelContent = ViewModelProviders.of(
+                this,
+                viewModelFactory).get(ViewModelContent.class);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Bundle arguments = getArguments();
         checkArguments(arguments);
         noteId = arguments.getString(KEY_ARG_NOTE_ID);
+        viewModelContent.fetchNoteById(noteId);
     }
 
     @Nullable
@@ -51,6 +67,10 @@ public class FragmentContent extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        viewModelContent.getFetchNoteByIdResponse().observe(
+                this,
+                this::showNote
+        );
         showNote();
         //getActivity().setTitle(note.getTitle());
     }
@@ -63,11 +83,12 @@ public class FragmentContent extends Fragment {
         throw new RuntimeException("Fragment doesn't have needed arguments. Call newInstance() static creation method.");
     }
 
-    private void showNote() {
-//        final Date noteDate = new Date(note.getCreationTimestamp());
-//        final DateFormat dateFormat = DateFormat.getInstance();
-//        textViewDate.setText(dateFormat.format(noteDate));
-//        textViewContent.setText(note.getContent());
-        textViewContent.setText(noteId);
+    private void showNote(final Note note) {
+        final Date noteDate = new Date(note.getCreationTimestamp());
+        final DateFormat dateFormat = DateFormat.getInstance();
+        textViewDate.setText(dateFormat.format(noteDate));
+        textViewContent.setText(note.getContent());
+        fragmentInteractionInterface.setTitle(note.getTitle());
+
     }
 }

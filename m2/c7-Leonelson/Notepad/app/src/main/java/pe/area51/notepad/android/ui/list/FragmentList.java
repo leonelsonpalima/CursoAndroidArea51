@@ -25,9 +25,10 @@ import java.util.Random;
 import pe.area51.notepad.R;
 import pe.area51.notepad.android.Application;
 import pe.area51.notepad.android.ViewModelFactory;
+import pe.area51.notepad.android.ui.FragmentBase;
 import pe.area51.notepad.domain.Note;
 
-public class FragmentList extends Fragment {
+public class FragmentList extends FragmentBase {
 
     public static final String TAG = "ListFragment";
 
@@ -40,9 +41,6 @@ public class FragmentList extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        onNoteSelectedListener = (FragmentListInterface) context;
-        final Application application = (Application) context.getApplicationContext();
-        final ViewModelFactory viewModelFactory = application.getViewModelFactory();
         viewModelList = ViewModelProviders
                 .of(this, viewModelFactory)
                 .get(ViewModelList.class);
@@ -81,7 +79,7 @@ public class FragmentList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Note note = notesArrayAdapter.getItem(i);
-                onNoteSelectedListener.onNoteSelected(note);
+                fragmentInteractionInterface.showNoteContent(note.getId());
             }
         });
         return view;
@@ -96,18 +94,13 @@ public class FragmentList extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.app_name);
+        fragmentInteractionInterface.setTitle(getString(R.string.app_name));
     }
 
     private void getNotes() {
         viewModelList.fetchAllNotes();
         viewModelList.getFetchAllNotesResponse()
-                .observe(this, new Observer<List<Note>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Note> notes) {
-                        onNotesChanged(notes);
-                    }
-                });
+                .observe(this, notes -> onNotesChanged(notes));
     }
 
     private void onNotesChanged(final List<Note> notes) {
