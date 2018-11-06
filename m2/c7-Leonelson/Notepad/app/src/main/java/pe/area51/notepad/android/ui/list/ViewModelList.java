@@ -1,4 +1,4 @@
-package pe.area51.notepad;
+package pe.area51.notepad.android.ui.list;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;

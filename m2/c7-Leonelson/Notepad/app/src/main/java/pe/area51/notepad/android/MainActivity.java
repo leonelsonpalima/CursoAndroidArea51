@@ -1,9 +1,12 @@
-package pe.area51.notepad;
+package pe.area51.notepad.android;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import pe.area51.notepad.R;
+import pe.area51.notepad.android.ui.content.FragmentContent;
+import pe.area51.notepad.android.ui.list.FragmentList;
 import pe.area51.notepad.domain.Note;
 
 public class MainActivity extends AppCompatActivity implements FragmentList.FragmentListInterface {

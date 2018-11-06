@@ -1,11 +1,9 @@
-package pe.area51.notepad;
+package pe.area51.notepad.android.ui.list;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,8 +22,10 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Random;
 
+import pe.area51.notepad.R;
+import pe.area51.notepad.android.Application;
+import pe.area51.notepad.android.ViewModelFactory;
 import pe.area51.notepad.domain.Note;
-import pe.area51.notepad.domain.NotesRepository;
 
 public class FragmentList extends Fragment {
 

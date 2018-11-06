@@ -1,9 +1,10 @@
-package pe.area51.notepad;
+package pe.area51.notepad.android;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
+import pe.area51.notepad.android.ui.list.ViewModelList;
 import pe.area51.notepad.domain.NotesRepository;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {

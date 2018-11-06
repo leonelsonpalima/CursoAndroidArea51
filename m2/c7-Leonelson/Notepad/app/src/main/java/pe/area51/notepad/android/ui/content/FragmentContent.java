@@ -1,4 +1,4 @@
-package pe.area51.notepad;
+package pe.area51.notepad.android.ui.content;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.Date;
 
+import pe.area51.notepad.R;
 import pe.area51.notepad.domain.Note;
 
 public class FragmentContent extends Fragment {

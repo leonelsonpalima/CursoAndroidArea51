@@ -1,14 +1,10 @@
-package pe.area51.notepad;
+package pe.area51.notepad.android;
 
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
 import android.arch.persistence.room.Room;
 
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory;
-import pe.area51.notepad.data.ram_database.RamDatabase;
 import pe.area51.notepad.data.room.RoomDatabase;
 import pe.area51.notepad.data.room.RoomNotesRepository;
-import pe.area51.notepad.data.sqlite.DatabaseManager;
-import pe.area51.notepad.data.sqlite.SqLiteDatabase;
 import pe.area51.notepad.domain.NotesRepository;
 
 public class Application extends android.app.Application {
