@@ -1,5 +1,6 @@
 package pe.area51.notepad.android.ui.content;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
@@ -22,10 +23,12 @@ public class ViewModelContent extends ViewModel {
     public void FetchNoteByIdResponse(@NonNull final String noteId) {
         AsyncTask.execute(() -> {
             fetchNoteByIdResponse.addSource(notesRepository.subscribeToNoteById(noteId),
-                    note -> {
-                        fetchNoteByIdResponse.setValue(note);
-                    }
+                    fetchNoteByIdResponse::setValue
             );
         });
+    }
+
+    public LiveData<Note> getFetchNoteByIdResponse(){
+        return fetchNoteByIdResponse;
     }
 }
