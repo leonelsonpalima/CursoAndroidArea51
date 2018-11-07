@@ -1,14 +1,15 @@
 package pe.area51.notepad.android.ui.content;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import pe.area51.notepad.domain.Note;
 
 public class FragmentContent extends FragmentBase {
 
-    private static final String KEY_ARG_NOTE_ID = "noteID";
+    private static final String KEY_ARG_NOTE_ID = "noteId";
 
     private TextView textViewDate;
     private TextView textViewContent;
@@ -44,7 +45,8 @@ public class FragmentContent extends FragmentBase {
         super.onAttach(context);
         viewModelContent = ViewModelProviders.of(
                 this,
-                viewModelFactory).get(ViewModelContent.class);
+                viewModelFactory
+        ).get(ViewModelContent.class);
     }
 
     @Override
@@ -54,6 +56,20 @@ public class FragmentContent extends FragmentBase {
         checkArguments(arguments);
         noteId = arguments.getString(KEY_ARG_NOTE_ID);
         viewModelContent.fetchNoteById(noteId);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_content, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.actionDeleteNote) {
+            deleteNote();
+        }
+        return false;
     }
 
     @Nullable
@@ -70,14 +86,8 @@ public class FragmentContent extends FragmentBase {
         super.onActivityCreated(savedInstanceState);
         viewModelContent.getFetchNoteByIdResponse().observe(
                 this,
-                new Observer<Note>() {
-                    @Override
-                    public void onChanged(@Nullable Note note) {
-                        showNote(note);
-                    }
-                }
+                this::showNote
         );
-        //getActivity().setTitle(note.getTitle());
     }
 
     private static void checkArguments(final Bundle arguments) {
@@ -89,11 +99,18 @@ public class FragmentContent extends FragmentBase {
     }
 
     private void showNote(final Note note) {
+        if (note == null) {
+            return;
+        }
         final Date noteDate = new Date(note.getCreationTimestamp());
         final DateFormat dateFormat = DateFormat.getInstance();
         textViewDate.setText(dateFormat.format(noteDate));
         textViewContent.setText(note.getContent());
         fragmentInteractionInterface.setTitle(note.getTitle());
+    }
 
+    private void deleteNote() {
+        viewModelContent.deleteNoteById(noteId);
+        fragmentInteractionInterface.closeFragment();
     }
 }
