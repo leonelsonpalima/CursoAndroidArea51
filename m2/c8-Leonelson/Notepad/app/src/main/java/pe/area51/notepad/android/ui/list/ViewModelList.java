@@ -56,7 +56,7 @@ public class ViewModelList extends ViewModel {
         return fetchAllNotesResponse;
     }
 
-    public LiveData<Note> getCreateNoteResponse() {
+    public MutableLiveData<Note> getCreateNoteResponse() {
         return createNoteResponse;
     }
 }

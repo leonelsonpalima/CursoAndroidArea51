@@ -83,7 +83,21 @@ public class FragmentList extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getNotes();
+        viewModelList.fetchAllNotes();
+        viewModelList.getCreateNoteResponse().observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(@Nullable Note note) {
+                if(note == null){
+                    Log.d("Fragment Lis", "nore == null");
+                    return;
+                }
+                Log.d("Fragment Lis", "nore != null");
+                onNoteCreated(note);
+                viewModelList.getCreateNoteResponse().setValue(null);
+            }
+        });
+        viewModelList.getFetchAllNotesResponse()
+                .observe(this, this::onNotesChanged);
     }
 
     @Override
@@ -92,10 +106,8 @@ public class FragmentList extends FragmentBase {
         fragmentInteractionInterface.setTitle(getString(R.string.app_name));
     }
 
-    private void getNotes() {
-        viewModelList.fetchAllNotes();
-        viewModelList.getFetchAllNotesResponse()
-                .observe(this, this::onNotesChanged);
+    private void onNoteCreated(final Note note) {
+        fragmentInteractionInterface.showNoteContent(note.getId());
     }
 
     private void onNotesChanged(final List<Note> notes) {
@@ -104,12 +116,8 @@ public class FragmentList extends FragmentBase {
     }
 
     private void createNote() {
-        final Random random = new Random();
-        final int randomInt = random.nextInt();
-        final String title = "Title " + randomInt;
-        final String content = getString(R.string.lorem_ipsum);
         final long creationTimestamp = System.currentTimeMillis();
-        viewModelList.createNote(title, content, creationTimestamp);
+        viewModelList.createNote("", "", creationTimestamp);
     }
 
     private static class NoteAdapter extends ArrayAdapter<Note> {
@@ -141,7 +149,11 @@ public class FragmentList extends FragmentBase {
                 view = convertView;
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.titleTextView.setText(note.getTitle());
+            String noteTitle = note.getTitle();
+            if(noteTitle.trim().length() == 0){
+                noteTitle = getContext().getString(R.string.untitled_note);
+            }
+            viewHolder.titleTextView.setText(noteTitle);
             return view;
         }
     }
