@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Alarm App</string>
+    <string name="error_no_number">No es un numero...</string>
+</resources>
